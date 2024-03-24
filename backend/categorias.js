@@ -33,3 +33,22 @@ const familia_y_mascotas = [
     "Pet", "Dog", "Cat", "Bird", "Fish",
     "Rabbit", "Hamster", "Turtle"
 ]
+
+
+// Función para elegir una palabra aleatoria de una categoría específica
+function elegirPalabraAleatoria(categoria) {
+    switch (categoria) {
+      case "saludos":
+        return saludosYPresentaciones[Math.floor(Math.random() * saludosYPresentaciones.length)];
+      case "viajes":
+        return viajesYDesplazamientos[Math.floor(Math.random() * viajesYDesplazamientos.length)];
+      case "gastronomia":
+        return gastronomiaYRestaurantes[Math.floor(Math.random() * gastronomiaYRestaurantes.length)];
+      case "familia":
+        return familiaYMascotas[Math.floor(Math.random() * familiaYMascotas.length)];
+      default:
+        return "Categoría no válida";
+    }
+  }
+
+module.exports = {elegirPalabraAleatoria}

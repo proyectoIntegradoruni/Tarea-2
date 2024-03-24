@@ -20,3 +20,6 @@ const params = {
     //keywordsThreshold: 0.5,
     //maxAlternatives: 3,
   };
+
+
+module.exports = {speechToText}
