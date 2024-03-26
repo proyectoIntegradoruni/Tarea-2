@@ -42,12 +42,41 @@ import { TypingIndicator } from '@chatscope/chat-ui-kit-react';
 function Home() {
   const [escri, setEscri] = useState(false);
   const [mensajes, setMensajes] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [nombreUsuario, setNombreUsuario] = useState("");
 
- 
+  useEffect(() => {
+    // Recuperar el nombre de usuario del almacenamiento local
+    const nombre = localStorage.getItem('nombreUsuario');
+    if (nombre) {
+      setNombreUsuario(nombre);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Función para obtener las categorías desde el servidor
+    const obtenerCategoriasDesdeServidor = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/categorias');
+        if (!response.ok) {
+          throw new Error('Error al obtener las categorías');
+        }
+        const data = await response.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    // Llamar a la función para obtener las categorías al montar el componente
+    obtenerCategoriasDesdeServidor();
+  }, []); // El segundo argumento del useEffect es un array vacío para que se ejecute solo una vez al montar el componente
+
+
   useEffect(() => {
     // Agregar mensaje de bienvenida con opciones cuando el componente se monta
     const welcomeMessage = {
-      content: "¡Hola! . ¿Quieres practicar tu pronunciación?",
+      content: "¡Hola ${nombreUsuario}¡, quieres practicar? ¿Qué categoría deseas seleccionar?",
       timestamp: new Date().toISOString(),
       isOwner: false // El mensaje es del asistente, no del usuario
     };
@@ -57,12 +86,12 @@ function Home() {
   // Función para manejar la respuesta del usuario
   const handleUserResponse = (response) => {
     const newMessage = {
-      content: response,
+      content: `Seleccionaste la categoría: ${response}`,
       timestamp: new Date().toISOString(),
       isOwner: true // El mensaje es del usuario
     };
     setMensajes(prevMessages => [...prevMessages, newMessage]);
-    // Aquí puedes agregar la lógica para responder al mensaje del usuario según su respuesta
+    setCategorias([]);    // Aquí puedes agregar la lógica para responder al mensaje del usuario según su respuesta
   };
 
   return (
@@ -77,6 +106,11 @@ function Home() {
           </div>
           <Messages messages={mensajes} />
           {escri && <TypingIndicator content="asesor escribiendo..." />}
+          <div className="categorias">
+            {categorias.map((categoria, index) => (
+              <button  className="login-form-btn2"   key={index} onClick={() => handleUserResponse(categoria)}>{categoria}</button>
+            ))}
+          </div>
           <Input asesor={"Juridico"} onResponse={handleUserResponse} />
         </div>
       </div>
@@ -85,4 +119,3 @@ function Home() {
 }
 
 export default Home;
-

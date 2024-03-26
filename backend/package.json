@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "dev": "node index.js"
+  },
   "dependencies": {
-    "ibm-watson": "^8.0.0"
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "ibm-watson": "^8.0.0",
+    "mongoose": "^8.2.3"
   }
 }

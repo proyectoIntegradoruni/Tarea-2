@@ -8,31 +8,46 @@ import "./styles.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Importa useNavigate y úsalo para la navegación
+  const navigate = useNavigate();
 
-  const handleregistro = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    navigate('/registro'); // Utiliza navigate para redirigir al usuario a la página de registro
-    console.log("autenticado");
+    try {
+      const response = await fetch('http://localhost:3001/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('nombreUsuario',response.nombre);
+        console.log(response.nombre)
+        navigate('/home');
+      } else {
+        alert(data.mensaje);
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      alert('Ocurrió un error al iniciar sesión. Por favor, intenta de nuevo más tarde.');
+    }
   };
 
-  const handleregistro2 = async (e) => {
+  const handleRegistro = (e) => {
     e.preventDefault();
-
-    navigate('/home'); // Utiliza navigate para redirigir al usuario a la página de registro
-    console.log("autenticado");
+    navigate('/registro');
   };
-
-
-  
-
 
   return (
     <div className="container">
       <div className="container-login">
         <div className="wrap-login">
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleLogin}>
             <span className="login-form-title"> Bienvenidxs </span>
 
             <span className="login-form-title">
@@ -45,8 +60,9 @@ function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                required
               />
-              <span className="focus-input" data-placeholder="Email"></span>
             </div>
 
             <div className="wrap-input">
@@ -55,17 +71,18 @@ function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
               />
-              <span className="focus-input" data-placeholder="Password"></span>
             </div>
 
             <div className="container-login-form-btn">
-              <button className="login-form-btn" onClick={handleregistro2}>Login</button>
+              <button className="login-form-btn" type="submit">Login</button>
             </div>
 
             <div className="text-center">
               <span className="txt1">No tienes cuenta? </span>
-              <a className="txt2" href="#" onClick={handleregistro}>
+              <a className="txt2" href="#" onClick={handleRegistro}>
                Crear cuenta
               </a>
             </div>

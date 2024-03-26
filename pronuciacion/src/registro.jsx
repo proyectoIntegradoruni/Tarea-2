@@ -1,30 +1,46 @@
-import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-
-import jpIMG from "./assets/react.svg";
-
-import "./styles.css";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Asumiendo que estás utilizando React Router para la navegación
 
 function Registro() {
+  const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Importa useNavigate y úsalo para la navegación
+  const navigate = useNavigate();
 
-
-  //login 
-
-  const handleLogin = async (e) => {
+  const handleRegistro = async (e) => {
     e.preventDefault();
 
-    navigate('/Login'); // Utiliza navigate para redirigir al usuario a la página de registro
-    console.log("autenticado");
+    try {
+      const response = await fetch('http://localhost:3001/registro', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nombre, email, password })
+      });
+
+      const data = await response.json();
+
+      // Si el registro es exitoso, redirige al usuario a la página de inicio de sesión
+      if (response.ok) {
+        navigate('/login');
+        alert(data); // Muestra un mensaje de éxito
+      } else {
+        // Si hay un error en el registro, muestra un mensaje de error
+        alert(data); // Muestra el mensaje de error recibido del servidor
+      }
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+      // Muestra un mensaje de error genérico si hay un problema con la petición
+      alert('Ocurrió un error al registrar. Por favor, intenta de nuevo más tarde.');
+    }
   };
 
   return (
     <div className="container">
       <div className="container-login">
         <div className="wrap-login">
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleRegistro}>
             <span className="login-form-title"> Registro </span>
 
             <span className="login-form-title">
@@ -33,12 +49,13 @@ function Registro() {
 
             <div className="wrap-input">
               <input
-                className={email !== "" ? "has-val input" : "input"}
-                type="Nombre"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                className={nombre !== "" ? "has-val input" : "input"}
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                placeholder="Nombre"
+                required
               />
-              <span className="focus-input" data-placeholder="Nombre"></span>
             </div>
 
             <div className="wrap-input">
@@ -47,8 +64,9 @@ function Registro() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                required
               />
-              <span className="focus-input" data-placeholder="Email"></span>
             </div>
 
             <div className="wrap-input">
@@ -57,23 +75,17 @@ function Registro() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
               />
-              <span className="focus-input" data-placeholder="Password"></span>
             </div>
 
             <div className="container-login-form-btn">
-              <button className="login-form-btn" onClick={handleLogin} >Registro</button>
+              <button className="login-form-btn" type="submit">Registro</button>
             </div>
-
-           
-            
           </form>
-          
         </div>
-
       </div>
-      
-     
     </div>
   );
 }
