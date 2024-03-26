@@ -24,20 +24,22 @@ const autenticar = async (req, res) => {
     const usuario = await UsuarioT.findOne({ email });
 
     if (!usuario) {
-      return res.status(401).json('Credenciales inválidas');
+      return res.status(401).json({ mensaje: 'Credenciales inválidas' });
     }
 
     if (usuario.password === password) {
       // Si las credenciales son correctas, puedes devolver el usuario autenticado
-      res.status(200).json(usuario);
+      const nombreUsuario = `${usuario.nombre}`;
+      res.status(200).json({ nombreUsuario });
     } else {
-      return res.status(400).json('Contraseña incorrecta');
+      return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json('Error interno del servidor');
+    res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };
+
 
 const registrarUsuario = async (req, res) => {
   const { email, nombre, password } = req.body;

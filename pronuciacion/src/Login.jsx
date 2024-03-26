@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import jpIMG from "./assets/react.svg";
 
 import "./styles.css";
 
@@ -12,7 +11,7 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch('http://localhost:3001/login', {
         method: 'POST',
@@ -21,13 +20,13 @@ function Login() {
         },
         body: JSON.stringify({ email, password })
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('nombreUsuario',response.nombre);
-        console.log(response.nombre)
+        
+        localStorage.setItem('nombreUsuario', data.nombreUsuario); // Corregido aquí
+        console.log(data); // Para verificar la respuesta del servidor
         navigate('/home');
       } else {
         alert(data.mensaje);

@@ -112,12 +112,12 @@ const Input = ({asesor}) => {
   return (
     <div className="input">
       <input
-        type="text"
-        placeholder="Escribe algo..."
-        value={texto}
-        onChange={handleChange}
-        style={{ color: 'black' }}
-      />
+      type="text"
+      placeholder="Presiona el micrófono y luego pronuncia la frase ⮕"
+      value={texto}
+      readOnly={true}
+      style={{ color: 'black' }}
+    />
      <div className="send">
           <img
             src={"https://cdn-icons-png.flaticon.com/512/17/17303.png"}
