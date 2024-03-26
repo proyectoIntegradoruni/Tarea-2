@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Asumiendo que estás utilizando React Router para la navegación
+import { useNavigate } from 'react-router-dom'; 
 
 function Registro() {
   const [nombre, setNombre] = useState("");
@@ -21,17 +21,15 @@ function Registro() {
 
       const data = await response.json();
 
-      // Si el registro es exitoso, redirige al usuario a la página de inicio de sesión
       if (response.ok) {
         navigate('/login');
-        alert(data); // Muestra un mensaje de éxito
+        alert(data); 
       } else {
-        // Si hay un error en el registro, muestra un mensaje de error
-        alert(data); // Muestra el mensaje de error recibido del servidor
+        
+        alert(data);
       }
     } catch (error) {
       console.error('Error al registrar usuario:', error);
-      // Muestra un mensaje de error genérico si hay un problema con la petición
       alert('Ocurrió un error al registrar. Por favor, intenta de nuevo más tarde.');
     }
   };
