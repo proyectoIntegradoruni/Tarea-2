@@ -5,5 +5,3 @@
 ## Heramienta
   IBM Watson Speech to Text
 
-## cosas por teminar
-  arreglar que salga el nombre de usuario en el mesaje (Karen)
