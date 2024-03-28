@@ -53,8 +53,25 @@ const Input = ({asesor}) => {
 
       recorder.onstop = () => {
         clearInterval(timerInterval);
-        const audioBlob = new Blob(chunks, { type: "audio/webm" });
-        
+        const audioBlob = new Blob(chunks, { type: "audio/mpeg" });
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'grabacion.mpeg'); // Asegúrate de reemplazar 'grabacion.webm' con el nombre deseado para el archivo de audio
+
+        // Realiza la solicitud POST al servidor
+        fetch('http://localhost:3001/audio', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('¡El archivo de audio se envió correctamente!');
+          } else {
+            console.error('Error al enviar el archivo de audio:', response.statusText);
+          }
+        })
+        .catch(error => {
+          console.error('Error al enviar el archivo de audio:', error);
+        });
         // Guardar el audio en la carpeta "audio"
         saveAudioToFile(audioBlob);
       };

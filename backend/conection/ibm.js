@@ -5,9 +5,9 @@ const { IamAuthenticator } = require('ibm-watson/auth');
 
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
-    apikey: process.env.APIKEY,
+    apikey: "AjUoSfSaQ5W-4gerstpxHvCD0empCdSe-d65jCUZDjGF",
   }),
-  serviceUrl: process.env.URL,
+  serviceUrl: "https://api.au-syd.speech-to-text.watson.cloud.ibm.com/instances/79307fc3-6bde-4beb-ad02-a2906d2f3766",
   disableSslVerification: true,
 });
 

@@ -5,6 +5,10 @@ const Usuario = require("./Modelo/usuario");
 const app = express();
 const cors = require("cors");
 const UsuarioT = require('./Modelo/usuario');
+const multer = require('multer'); // Importa multer
+require('dotenv').config();
+const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
+const { IamAuthenticator } = require('ibm-watson/auth');
 conectarDB();
 
 app.use(bodyParser.json());
@@ -141,6 +145,52 @@ app.get('/palabra', (req, res) => {
   const palabraAleatoria = elegirPalabraAleatoria(categoria);
   res.json(palabraAleatoria);
 });
+
+
+
+const upload = multer({ dest: 'uploads/' });
+
+// Middleware para manejar la carga de archivos de audio
+app.post('/audio', upload.single('audio'), (req, res) => {
+  const speechToText = new SpeechToTextV1({
+    authenticator: new IamAuthenticator({
+      apikey: "AjUoSfSaQ5W-4gerstpxHvCD0empCdSe-d65jCUZDjGF",
+    }),
+    serviceUrl: "https://api.au-syd.speech-to-text.watson.cloud.ibm.com/instances/79307fc3-6bde-4beb-ad02-a2906d2f3766",
+    disableSslVerification: true,
+  });
+  
+  
+  // Verificar si se proporcionó un archivo de audio
+  if (!req.file) {
+    return res.status(400).json({ mensaje: 'No se ha proporcionado ningún archivo de audio' });
+  }
+  const contentType = req.file.mimetype;
+
+  // Configurar los parámetros para enviar el audio a Watson Speech to Text
+  const params = {
+    audio: req.file.buffer, // Pasar el contenido del archivo como un búfer
+    contentType: req.file.mimetype,
+  };
+
+  // Enviar el audio a Watson Speech to Text y obtener la transcripción
+  speechToText.recognize(params)
+    .then(response => {
+      // Obtener la transcripción del audio
+      const transcripcion = response.result.results[0].alternatives[0].transcript;
+      
+      // Enviar la transcripción como respuesta al cliente
+      res.status(200).json({ transcripcion });
+    })
+    .catch(error => {
+      // Manejar cualquier error que ocurra durante la conversión de audio a texto
+      console.error('Error al convertir audio en texto:', error);
+      res.status(500).json({ mensaje: 'Error interno del servidor' });
+    }); /**/
+})
+
+
+
 app.listen(PORT, () => {
     console.log(`Servidor Express escuchando en el puerto ${PORT}`);
   })
