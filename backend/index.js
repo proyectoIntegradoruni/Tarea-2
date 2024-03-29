@@ -148,25 +148,35 @@ app.get('/palabra', (req, res) => {
 
 
 
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: function(req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '.webm'); // Agregar .webm al final del nombre del archivo
+  }
+});
+const upload = multer({ storage: storage });
 
 // Middleware para manejar la carga de archivos de audio
 app.post('/audio', upload.single('audio'), (req, res) => {
+
+ 
   const speechToText = new SpeechToTextV1({
     authenticator: new IamAuthenticator({
       apikey: "AjUoSfSaQ5W-4gerstpxHvCD0empCdSe-d65jCUZDjGF",
     }),
     serviceUrl: "https://api.au-syd.speech-to-text.watson.cloud.ibm.com/instances/79307fc3-6bde-4beb-ad02-a2906d2f3766",
     disableSslVerification: true,
-  });
+  }); 
   
   
   // Verificar si se proporcionó un archivo de audio
-  if (!req.file) {
+ if (!req.file) {
     return res.status(400).json({ mensaje: 'No se ha proporcionado ningún archivo de audio' });
   }
-  const contentType = req.file.mimetype;
-  const transferencia = fs.createReadStream('./uploads/audio_1711673753216.webm');
+
+ 
+   const contentType = req.file.mimetype;
+  const transferencia = fs.createReadStream(req.file.path);
   // Configurar los parámetros para enviar el audio a Watson Speech to Text
   const params = {
     audio: transferencia, // Pasar el contenido del archivo como un búfer
@@ -187,7 +197,7 @@ app.post('/audio', upload.single('audio'), (req, res) => {
       // Manejar cualquier error que ocurra durante la conversión de audio a texto
       console.error('Error al convertir audio en texto:', error);
       res.status(500).json({ mensaje: 'Error interno del servidor' });
-    }); /**/
+    }); 
 })
 
 
