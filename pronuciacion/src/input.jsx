@@ -37,6 +37,7 @@ const Input = ({asesor}) => {
   const [audioChunks, setAudioChunks] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [timerInterval, setTimerInterval] = useState(null);
+  const [obtenidaP, setObtenidaP] = useState("");
 
   const startRecording = async () => {
     try {
@@ -57,7 +58,6 @@ const Input = ({asesor}) => {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'grabacion.mpeg'); // Asegúrate de reemplazar 'grabacion.webm' con el nombre deseado para el archivo de audio
 
-        // Realiza la solicitud POST al servidor
         fetch('http://localhost:3001/audio', {
           method: 'POST',
           body: formData
@@ -65,9 +65,16 @@ const Input = ({asesor}) => {
         .then(response => {
           if (response.ok) {
             console.log('¡El archivo de audio se envió correctamente!');
+            return response.json(); // Devuelve la respuesta como JSON para poder acceder a la transcripción
           } else {
             console.error('Error al enviar el archivo de audio:', response.statusText);
+            throw new Error('Error al enviar el archivo de audio');
           }
+        })
+        .then(data => {
+          // Manejar la transcripción obtenida del backend
+          setObtenidaP(data.transcripcion)
+          console.log('Transcripción:', data.transcripcion);
         })
         .catch(error => {
           console.error('Error al enviar el archivo de audio:', error);

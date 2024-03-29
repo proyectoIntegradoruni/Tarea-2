@@ -10,7 +10,7 @@ require('dotenv').config();
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const { IamAuthenticator } = require('ibm-watson/auth');
 conectarDB();
-
+const fs = require('fs');
 app.use(bodyParser.json());
 app.use(cors());
 const PORT = process.env.PORT || 3001;
@@ -166,11 +166,11 @@ app.post('/audio', upload.single('audio'), (req, res) => {
     return res.status(400).json({ mensaje: 'No se ha proporcionado ningún archivo de audio' });
   }
   const contentType = req.file.mimetype;
-
+  const transferencia = fs.createReadStream('./uploads/audio_1711673753216.webm');
   // Configurar los parámetros para enviar el audio a Watson Speech to Text
   const params = {
-    audio: req.file.buffer, // Pasar el contenido del archivo como un búfer
-    contentType: req.file.mimetype,
+    audio: transferencia, // Pasar el contenido del archivo como un búfer
+    contentType: 'audio/webm',
   };
 
   // Enviar el audio a Watson Speech to Text y obtener la transcripción
@@ -180,6 +180,7 @@ app.post('/audio', upload.single('audio'), (req, res) => {
       const transcripcion = response.result.results[0].alternatives[0].transcript;
       
       // Enviar la transcripción como respuesta al cliente
+      console.log("bien la trascripcion")
       res.status(200).json({ transcripcion });
     })
     .catch(error => {

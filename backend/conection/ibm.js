@@ -14,8 +14,8 @@ const speechToText = new SpeechToTextV1({
 
 const params = {
     objectMode: true,
-    contentType: 'audio/mp3',
-    model: 'es-CO_NarrowbandModel',
+    contentType: 'audio/webm',
+    model: 'en-US_NarrowbandModel',
     //keywords: ['colorado', 'tornado', 'tornadoes'],
     //keywordsThreshold: 0.5,
     //maxAlternatives: 3,
