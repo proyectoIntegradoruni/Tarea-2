@@ -6,6 +6,7 @@ const app = express();
 const cors = require("cors");
 const UsuarioT = require('./Modelo/usuario');
 const multer = require('multer'); // Importa multer
+const Mensaje = require("./Modelo/conversacion")
 require('dotenv').config();
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const { IamAuthenticator } = require('ibm-watson/auth');
@@ -64,6 +65,55 @@ const registrarUsuario = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json('Error interno del servidor');
+  }
+};
+
+const agregarMensaje = async (req, res) => {
+  const {  remitente, destinatario, contenido,reproduccion} = req.body;
+  const nuevoMensaje = new Mensaje({
+    remitente,
+    destinatario,
+    contenido,reproduccion
+  });
+
+  try {
+
+      await nuevoMensaje.validate();
+
+      await nuevoMensaje.save();
+  
+     
+      res.status(200).json({ respuesta: nuevoMensaje });
+     
+   
+
+      return nuevoMensaje;
+  } catch (error) {
+      console.error('Error al agregar el mensaje:', error);
+      throw error;
+  }
+};
+
+
+const obtenerMensajes = async (req, res) => {
+
+  const { remitente, destinatario } = req.body;
+  try {
+    const { remitente, destinatario } = req.body;
+    const mensajes = await Mensaje.find({
+      $or: [
+        { remitente, destinatario },
+        { remitente: destinatario, destinatario: remitente },
+      ],
+    })
+
+    res.status(200).json({ mensajes });
+
+    return mensajes;
+  } catch (error) {
+    console.error('Error al obtener los mensajes:', error);
+    res.status(500).json({ error: 'Error al obtener los mensajes' });
+    throw error;
   }
 };
 
@@ -200,8 +250,12 @@ app.post('/audio', upload.single('audio'), (req, res) => {
     }); 
 })
 
+app.post('/mensaje', agregarMensaje);
+app.post('/historial',obtenerMensajes);
 
 
+
+  
 app.listen(PORT, () => {
     console.log(`Servidor Express escuchando en el puerto ${PORT}`);
   })

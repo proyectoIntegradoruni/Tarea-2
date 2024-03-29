@@ -3,7 +3,7 @@ import Input, { pp } from "./input";
 import Messages from "./Messages";
 import { TypingIndicator } from '@chatscope/chat-ui-kit-react';
 import { useSpeechSynthesis } from 'react-speech-kit';
-
+import axios from 'axios';
 
 function Home() {
   const [escri, setEscri] = useState(false);
@@ -20,7 +20,7 @@ function Home() {
       setNombreUsuario(nombre);
     }
   }, []);
- console.log(pp)
+
   useEffect(() => {
     // Función para obtener las categorías desde el servidor
     const obtenerCategoriasDesdeServidor = async () => {
@@ -47,55 +47,110 @@ function Home() {
       timestamp: new Date().toISOString(),
       isOwner: false, // El mensaje es del asistente, no del usuario
       reproduccion: false,
-      text: palabra
-      
+      text: palabra      
     };
     setMensajes([welcomeMessage]);
   }, [nombreUsuario]);
 
+  useEffect(() => {
+    const obtenerMensajes = async () => {
+      try {
+        const remitente = nombreUsuario;
+        const destinatario = 'Pronunciacion';
+        const url = 'http://localhost:3001/historial';
+
+        // Cambia esta línea a axios.get si es una solicitud GET
+        const response = await axios.post(url, { remitente, destinatario });
+        const mensajesObtenidos = response.data.mensajes;
+
+        setMensajes(mensajesObtenidos);
+        console.log('Mensajes obtenidos:', mensajesObtenidos);
+      } catch (error) {
+        console.error('Error al obtener los mensajes:', error);
+      }
+    };
+
+    // Solo ejecutar obtenerMensajes si hay mensajes en el estado (es decir, el mensaje de bienvenida ya se ha establecido)
+    if (mensajes.length > 0) {
+      const intervalId = setInterval(() => {
+        obtenerMensajes();
+      }, 2000);
+
+      // Limpiar el intervalo al desmontar el componente
+      return () => clearInterval(intervalId);
+    }
+  }, [mensajes]);
+
+
+
+ 
+
   // Función para manejar la respuesta del usuario
   const handleUserResponse = async (response) => {
     setCategorias([]);
+  
     try {
-      // Realizar la petición al servidor con la categoría seleccionada
+      // Realizar la petición al servidor para obtener una palabra aleatoria de la categoría seleccionada
       const fetchResponse = await fetch(`http://localhost:3001/palabra?categoria=${response}`);
+      
+      // Verificar si la respuesta es exitosa
       if (!fetchResponse.ok) {
         throw new Error('Error al obtener la palabra aleatoria');
       }
+  
       const data = await fetchResponse.json();
       setPalabra(data);
+      console.log(palabra)
+      
+      // Crear un nuevo mensaje del usuario para indicar la categoría seleccionada
+      const newMessageUser1 = {
+        remitente:`${nombreUsuario}` , // El remitente es "Pronunciacion" porque es el sistema de pronunciación
+        destinatario:  "Pronunciacion", // El destinatario es el usuario actual
+        contenido: `Seleccionaste la categoría: ${response}`,
+        reproduccion: false // No se reproduce este mensaje
+      };
+      
+      // Realizar la petición al servidor para enviar el nuevo mensaje
+      const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newMessageUser1)
+      });
   
-      const newMessageUser = {
-        content: `Seleccionaste la categoría: ${response}`,
-        timestamp: new Date().toISOString(),
-        isOwner: true,
-        reproduccion: false,
-        text: data
+      // Verificar si la primera solicitud fue exitosa
+      if (!fetchResponse1.ok) {
+        throw new Error('Error al enviar el mensaje 1');
+      }
+  
+      // Crear un nuevo mensaje del usuario para reproducir la palabra
+      const newMessageUser2 = {
+        remitente: "Pronunciacion", // El remitente es el usuario actual
+        destinatario: `${nombreUsuario}`, // El destinatario es el sistema de pronunciación
+        contenido: `${data}`, // El contenido es la palabra seleccionada
+        reproduccion: true // Se reproduce este mensaje
       };
   
-      const newMessageAsistente = {
-        content: data,
-        timestamp: new Date().toISOString(),
-        isOwner: false,
-        reproduccion: true,
-        text: data
-      };
+      // Realizar la petición al servidor para enviar el nuevo mensaje
+      const fetchResponse2 = await fetch('http://localhost:3001/mensaje', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newMessageUser2)
+      });
   
-      setMensajes(prevMessages => [...prevMessages, newMessageUser, newMessageAsistente]);
-      // speak({ text: data });  Convertir el texto de la palabra aleatoria a voz y reproducirlo
+      // Verificar si la segunda solicitud fue exitosa
+      if (!fetchResponse2.ok) {
+        throw new Error('Error al enviar el mensaje 2');
+      }/**/
     } catch (error) {
       console.error('Error:', error);
       // Manejar el error según sea necesario
     }
   };
-  
-
-  const reproducirPronunciacion = () => {
-    if (palabra) {
-      speak({ text: palabra });
-    }
-  };
-
+   
   const verificar = () => {
     if (palabra.toLowerCase() === pp.toLowerCase()) {
       console.log("felicitaciones")
@@ -108,6 +163,19 @@ function Home() {
     }
    
   };
+
+  const messages = mensajes.map(item => ({
+    
+    content: item.contenido,
+    isOwner: item.destinatario === 'Pronunciacion', 
+    reproduccion: item.reproduccion
+  }));
+  const bienvenida = {
+    content: `¡Hola ${nombreUsuario}!, ¿quieres practicar? ¿Qué categoría deseas seleccionar?`,
+    isOwner: false,
+    reproduccion: false,
+  }
+  
   
   return (
     <div className='home'>
@@ -120,7 +188,7 @@ function Home() {
             </div>
           </div>
           
-          <Messages messages={mensajes} />
+          <Messages messages={messages} />
           {escri && <TypingIndicator content="asesor escribiendo..." />}
           <div className="categorias">
             {categorias.map((categoria, index) => (

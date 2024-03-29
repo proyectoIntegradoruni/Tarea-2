@@ -77,11 +77,20 @@ const Input = ({asesor}) => {
           setObtenidaP(data.transcripcion)
           console.log('Transcripción:', data.transcripcion);
         })
+
+        
         .catch(error => {
           console.error('Error al enviar el archivo de audio:', error);
         });
         // Guardar el audio en la carpeta "audio"
         saveAudioToFile(audioBlob);
+
+
+        //peticion mandole  mensaje  de la transcripcion 
+
+        
+
+
       };
 
       recorder.start();

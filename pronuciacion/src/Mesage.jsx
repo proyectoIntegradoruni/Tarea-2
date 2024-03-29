@@ -4,7 +4,7 @@ import { useSpeechSynthesis } from 'react-speech-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVolumeUp } from '@fortawesome/free-solid-svg-icons'
 
-const Message = ({ content, timestamp, isOwner,reproduccion,text}) => {
+const Message = ({ content, isOwner,reproduccion}) => {
     const ownerImageUrl = "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg";
     const nonOwnerImageUrl = "https://cdn-icons-png.flaticon.com/512/3898/3898068.png";
     const[palabra, setPalabra] =  useState("");
@@ -15,7 +15,7 @@ const Message = ({ content, timestamp, isOwner,reproduccion,text}) => {
 
   
     const reproducirPronunciacion = () => {
-      setPalabra(text)
+      setPalabra(content)
       if (palabra) {
         console.log(true)
         speak({ text: palabra });

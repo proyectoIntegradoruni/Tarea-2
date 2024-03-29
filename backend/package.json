@@ -3,6 +3,7 @@
     "dev": "node index.js"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "ibm-watson": "^8.0.0",
