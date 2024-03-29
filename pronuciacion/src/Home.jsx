@@ -95,6 +95,19 @@ function Home() {
       speak({ text: palabra });
     }
   };
+
+  const verificar = () => {
+    if (palabra.toLowerCase() === pp.toLowerCase()) {
+      console.log("felicitaciones")
+      
+    }
+    else
+    {
+      console.log("fallaste")
+     
+    }
+   
+  };
   
   return (
     <div className='home'>
@@ -115,7 +128,7 @@ function Home() {
             ))}
           </div>
           <Input asesor={"Juridico"} onResponse={handleUserResponse} />
-          <p>la palabra es: {pp}</p>
+          
           
         </div>
        {/* <button onClick={reproducirPronunciacion}>Reproducir Pronunciación</button>*/}
