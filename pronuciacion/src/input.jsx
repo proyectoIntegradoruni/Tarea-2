@@ -5,6 +5,7 @@ import Attach from "./img/attach.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 
+var pp = ""
 //import axios from 'axios';
 const Input = ({asesor}) => {
   const [texto, setTexto] = useState('');
@@ -38,7 +39,7 @@ const Input = ({asesor}) => {
   const [startTime, setStartTime] = useState(null);
   const [timerInterval, setTimerInterval] = useState(null);
   const [obtenidaP, setObtenidaP] = useState("");
-
+  
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -100,6 +101,7 @@ const Input = ({asesor}) => {
       mediaRecorder.stop();
     }
   };
+  pp = obtenidaP
 
   const updateRecordingTime = () => {
     const currentTimeMillis = Date.now() - startTime;
@@ -158,4 +160,4 @@ const Input = ({asesor}) => {
 };
 
 
-export default Input
+export {Input as default, pp}

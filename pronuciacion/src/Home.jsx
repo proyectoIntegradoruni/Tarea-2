@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Input from "./input";
+import Input, { pp } from "./input";
 import Messages from "./Messages";
 import { TypingIndicator } from '@chatscope/chat-ui-kit-react';
 import { useSpeechSynthesis } from 'react-speech-kit';
+
 
 function Home() {
   const [escri, setEscri] = useState(false);
@@ -11,7 +12,7 @@ function Home() {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const { speak } = useSpeechSynthesis(); 
   const[palabra, setPalabra] =  useState("");
-
+  
   useEffect(() => {
     // Recuperar el nombre de usuario del almacenamiento local
     const nombre = localStorage.getItem('nombreUsuario');
@@ -19,7 +20,7 @@ function Home() {
       setNombreUsuario(nombre);
     }
   }, []);
-
+ console.log(pp)
   useEffect(() => {
     // Función para obtener las categorías desde el servidor
     const obtenerCategoriasDesdeServidor = async () => {
@@ -94,7 +95,7 @@ function Home() {
       speak({ text: palabra });
     }
   };
-
+  
   return (
     <div className='home'>
       <div className="container">  
@@ -105,6 +106,7 @@ function Home() {
               <img src={"https://cdn-icons-png.flaticon.com/512/3898/3898068.png"} alt="" />
             </div>
           </div>
+          
           <Messages messages={mensajes} />
           {escri && <TypingIndicator content="asesor escribiendo..." />}
           <div className="categorias">
@@ -113,6 +115,8 @@ function Home() {
             ))}
           </div>
           <Input asesor={"Juridico"} onResponse={handleUserResponse} />
+          <p>la palabra es: {pp}</p>
+          
         </div>
        {/* <button onClick={reproducirPronunciacion}>Reproducir Pronunciación</button>*/}
       </div>
