@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Input, { pp } from "./input";
+import Input from "./input";
 import Messages from "./Messages";
 import { TypingIndicator } from '@chatscope/chat-ui-kit-react';
 import { useSpeechSynthesis } from 'react-speech-kit';
@@ -151,18 +151,7 @@ function Home() {
     }
   };
    
-  const verificar = () => {
-    if (palabra.toLowerCase() === pp.toLowerCase()) {
-      console.log("felicitaciones")
-      
-    }
-    else
-    {
-      console.log("fallaste")
-     
-    }
-   
-  };
+  
 
   const messages = mensajes.map(item => ({
     
@@ -195,7 +184,7 @@ function Home() {
               <button  className="login-form-btn2"   key={index} onClick={() => handleUserResponse(categoria)}>{categoria}</button>
             ))}
           </div>
-          <Input asesor={"Juridico"} onResponse={handleUserResponse} />
+          <Input asesor={palabra} onResponse={handleUserResponse} />
           
           
         </div>

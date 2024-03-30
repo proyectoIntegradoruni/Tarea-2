@@ -1,45 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Img from "./img/img.png"
 import Attach from "./img/attach.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 
-var pp = ""
+
+let audioUser = ""
 //import axios from 'axios';
 const Input = ({asesor}) => {
   const [texto, setTexto] = useState('');
   const [grabando, setGrabando] = useState(false); // Estado para indicar si se está grabando o no
-
-
-  const handleChange = (event) => {
-    setTexto(event.target.value);
-  };
-
-  const handleSend = () => {
-    // Aquí puedes hacer algo con el texto capturado, por ejemplo, enviarlo a través de una función o hacer alguna operación.
-    console.log('Texto capturado:', texto);
-  };
-
-
-  const handleenviar = async (e) => {
-    
-   
-  
-     setTexto("")
-    
-  };
-
-
-
-
+  const palabrass = asesor
 
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [audioChunks, setAudioChunks] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [timerInterval, setTimerInterval] = useState(null);
   const [obtenidaP, setObtenidaP] = useState("");
-  
+  const [nombreUsuario, setNombreUsuario] = useState("");
+
+
+  const [verificado, setVerificado] = useState(false);
+
+
+  useEffect(() => {
+    // Recuperar el nombre de usuario del almacenamiento local
+    const nombre = localStorage.getItem('nombreUsuario');
+    if (nombre) {
+      setNombreUsuario(nombre);
+    }
+  }, []);
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -53,7 +44,7 @@ const Input = ({asesor}) => {
         }
       };
 
-      recorder.onstop = () => {
+      recorder.onstop = async () => {
         clearInterval(timerInterval);
         const audioBlob = new Blob(chunks, { type: "audio/mpeg" });
         const formData = new FormData();
@@ -75,7 +66,8 @@ const Input = ({asesor}) => {
         .then(data => {
           // Manejar la transcripción obtenida del backend
           setObtenidaP(data.transcripcion)
-          console.log('Transcripción:', data.transcripcion);
+          console.log('Transcripción:', data.transcripcion, palabrass);
+          
         })
 
         
@@ -85,20 +77,59 @@ const Input = ({asesor}) => {
         // Guardar el audio en la carpeta "audio"
         saveAudioToFile(audioBlob);
 
+        // Crear un FileReader
+        const reader = new FileReader();
 
-        //peticion mandole  mensaje  de la transcripcion 
+        // Cuando la lectura esté completa, ejecutar esta función
+        reader.onload = async function(event) {
+            // Obtener el contenido del archivo en base64
+            const base64Data = event.target.result;
+            audioUser = base64Data
+            // Aquí puedes hacer lo que necesites con la base64Data, como enviarla mediante una solicitud HTTP
+            
+            // Por ejemplo, puedes loguearla en la consola para verla
+            console.log(base64Data);
+
+            // Crear un nuevo mensaje del usuario para indicar la categoría seleccionada
+            const newMessageUser1 = {
+              remitente:`${nombreUsuario}` , // El remitente es "Pronunciacion" porque es el sistema de pronunciación
+              destinatario:  "Pronunciacion", // El destinatario es el usuario actual
+              contenido: `${audioUser}`,
+              reproduccion: false // No se reproduce este mensaje
+            };
+            //peticion mandole  mensaje  de la transcripcion 
+            const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(newMessageUser1)
+            });
+        
+            // Verificar si la primera solicitud fue exitosa
+            if (!fetchResponse1.ok) {
+              throw new Error('Error al enviar el mensaje 1');
+            }
+
+            // Llamar a la función verificar después de que se haya enviado el mensaje
+            
+        };
+
+        // Leer el blob como un dato de URL
+        reader.readAsDataURL(audioBlob);
 
         
-
-
+        
       };
-
+      
       recorder.start();
       setStartTime(Date.now());
       const interval = setInterval(updateRecordingTime, 1000);
       setTimerInterval(interval);
-
+      
       setAudioChunks(chunks);
+      
+      
     } catch (error) {
       console.error("Error al acceder al micrófono:", error);
     }
@@ -108,10 +139,13 @@ const Input = ({asesor}) => {
     if (mediaRecorder && mediaRecorder.state === "recording") {
       clearInterval(timerInterval);
       mediaRecorder.stop();
+      
     }
+    
   };
-  pp = obtenidaP
+  
 
+  
   const updateRecordingTime = () => {
     const currentTimeMillis = Date.now() - startTime;
     const minutes = Math.floor(currentTimeMillis / 60000);
@@ -142,7 +176,73 @@ const Input = ({asesor}) => {
 
     // Simular el clic para iniciar la descarga
     downloadLink.click();
+    
   };
+
+  const verificar = async () => {
+    console.log(palabrass, obtenidaP)
+    const p1 = palabrass.toLowerCase().trim()
+    const p2 = obtenidaP.toLowerCase().trim()
+    console.log(palabrass == obtenidaP)
+    if (p1 == p2) {
+      console.log("felicitaciones")
+      // Crear un nuevo mensaje del usuario para indicar la categoría seleccionada
+      const newMessageUser1 = {
+        remitente:"Pronunciacion" , // El remitente es "Pronunciacion" porque es el sistema de pronunciación
+        destinatario:  `${nombreUsuario}`, // El destinatario es el usuario actual
+        contenido: `Felicitaciones, pronunciaste correctamente ${obtenidaP}`,
+        reproduccion: false // No se reproduce este mensaje
+      };
+      //peticion mandole  mensaje  de la transcripcion 
+      const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newMessageUser1)
+      });
+  
+      // Verificar si la primera solicitud fue exitosa
+      if (!fetchResponse1.ok) {
+        throw new Error('Error al enviar el mensaje 1');
+      }
+      
+    }
+    else 
+    {
+      console.log("fallaste")
+      // Crear un nuevo mensaje del usuario para indicar la categoría seleccionada
+      const newMessageUser1 = {
+        remitente:"Pronunciacion" , // El remitente es "Pronunciacion" porque es el sistema de pronunciación
+        destinatario:  `${nombreUsuario}`, // El destinatario es el usuario actual
+        contenido: `no pronunciaste correctamente, dijiste ${obtenidaP}, en ves de ${palabrass}`,
+        reproduccion: false // No se reproduce este mensaje
+      };
+      //peticion mandole  mensaje  de la transcripcion 
+      const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newMessageUser1)
+      });
+  
+      // Verificar si la primera solicitud fue exitosa
+      if (!fetchResponse1.ok) {
+        throw new Error('Error al enviar el mensaje 1');
+      }
+    }
+   
+  };
+  
+
+  useEffect(() => {
+      // Verificar si obtenidaP no está vacío, el proceso de carga del archivo ha finalizado y verificar no ha sido ejecutado antes
+      if (obtenidaP !== "" && audioUser !== "" && !verificado) {
+          verificar(); // Ejecutar la función verificar
+          setVerificado(true); // Actualizar el estado para indicar que verificar ha sido ejecutado
+      }
+  }, [obtenidaP, audioUser, verificado]); // Dependencias que activan el efecto
 
   return (
     <div className="input">
@@ -169,4 +269,4 @@ const Input = ({asesor}) => {
 };
 
 
-export {Input as default, pp}
+export default Input

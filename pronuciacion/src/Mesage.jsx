@@ -13,7 +13,9 @@ const Message = ({ content, isOwner,reproduccion}) => {
 
     const imageUrl = isOwner ? ownerImageUrl : nonOwnerImageUrl;
 
-  
+    // Verificar si content es una cadena de texto o un archivo de audio codificado en Base64
+    const isAudio = typeof content === 'string' && content.startsWith('data:audio/');
+
     const reproducirPronunciacion = () => {
       setPalabra(content)
       if (palabra) {
@@ -33,7 +35,16 @@ const Message = ({ content, isOwner,reproduccion}) => {
       </div>
 
       <div className="messageContent">
+      {isAudio ? (
+        // Si es un archivo de audio, renderizar un elemento <audio> con la fuente codificada en Base64
+        <audio controls>
+          <source src={content} type="audio/mp3" />
+          Tu navegador no soporta la reproducción de audio.
+        </audio>
+      ) : (
+        // Si es una cadena de texto, renderizar un elemento <p> con el contenido de texto
         <p>{content}</p>
+      )}
       </div>
       {/* Mostrar el botón solo si reproduccion es true */}
       {reproduccion && (
