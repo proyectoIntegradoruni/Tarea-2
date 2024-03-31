@@ -5,13 +5,13 @@ import Attach from "./img/attach.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 
-
-let audioUser = ""
+  let audioUser = ""
 //import axios from 'axios';
 const Input = ({asesor}) => {
   const [texto, setTexto] = useState('');
   const [grabando, setGrabando] = useState(false); // Estado para indicar si se está grabando o no
-  const palabrass = asesor
+  const palabrass = localStorage.getItem('palabra')
+
 
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [audioChunks, setAudioChunks] = useState([]);
@@ -22,7 +22,7 @@ const Input = ({asesor}) => {
 
 
   const [verificado, setVerificado] = useState(false);
-
+  const [primeravez,setPrimeravez]= useState(true);
 
   useEffect(() => {
     // Recuperar el nombre de usuario del almacenamiento local
@@ -36,7 +36,7 @@ const Input = ({asesor}) => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
       setMediaRecorder(recorder);
-
+      audioUser=""//resetiar el audio
       const chunks = [];
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -66,8 +66,13 @@ const Input = ({asesor}) => {
         .then(data => {
           // Manejar la transcripción obtenida del backend
           setObtenidaP(data.transcripcion)
-          console.log('Transcripción:', data.transcripcion, palabrass);
-          
+          localStorage.setItem('transcripcion',data.transcripcion)
+          console.log('Transcripción:', data.transcripcion,'palabra obtenida : ', palabrass);
+          if (!primeravez) {
+            setTimeout(() => {
+              verificar();
+          }, 3000); // Llama a verificar después de 3 segundos // Llama a verificar después de que setObtenidaP haya completado su actualización
+          }
         })
 
         
@@ -158,7 +163,7 @@ const Input = ({asesor}) => {
     if (mediaRecorder && mediaRecorder.state === "recording") {
       stopRecording();
       setGrabando(false); // Cuando se detiene la grabación, se establece grabando en false
-
+      
     } else {
       startRecording();
       setGrabando(true);
@@ -180,9 +185,12 @@ const Input = ({asesor}) => {
   };
 
   const verificar = async () => {
-    console.log(palabrass, obtenidaP)
+    
+    const palabraobt = localStorage.getItem('transcripcion')
+    console.log('Transcripción:', palabraobt,'palabra obtenida : ', palabrass);
     const p1 = palabrass.toLowerCase().trim()
-    const p2 = obtenidaP.toLowerCase().trim()
+    const p2 =localStorage.getItem('transcripcion').toLowerCase().trim()
+    localStorage.setItem('reiniciocategorias', true);
     console.log(palabrass == obtenidaP)
     if (p1 == p2) {
       console.log("felicitaciones")
@@ -190,7 +198,7 @@ const Input = ({asesor}) => {
       const newMessageUser1 = {
         remitente:"Pronunciacion" , // El remitente es "Pronunciacion" porque es el sistema de pronunciación
         destinatario:  `${nombreUsuario}`, // El destinatario es el usuario actual
-        contenido: `Felicitaciones, pronunciaste correctamente ${obtenidaP}`,
+        contenido: `Felicitaciones, pronunciaste correctamente ${localStorage.getItem('transcripcion')}`,
         reproduccion: false // No se reproduce este mensaje
       };
       //peticion mandole  mensaje  de la transcripcion 
@@ -215,7 +223,7 @@ const Input = ({asesor}) => {
       const newMessageUser1 = {
         remitente:"Pronunciacion" , // El remitente es "Pronunciacion" porque es el sistema de pronunciación
         destinatario:  `${nombreUsuario}`, // El destinatario es el usuario actual
-        contenido: `no pronunciaste correctamente, dijiste ${obtenidaP}, en ves de ${palabrass}`,
+        contenido: `Hey ${nombreUsuario}, no pronunciaste correctamente. Dijiste "${localStorage.getItem('transcripcion')}" en vez de "${palabrass}". Escucha de nuevo el audio e inténtalo de nuevo.`,
         reproduccion: false // No se reproduce este mensaje
       };
       //peticion mandole  mensaje  de la transcripcion 
@@ -241,6 +249,8 @@ const Input = ({asesor}) => {
       if (obtenidaP !== "" && audioUser !== "" && !verificado) {
           verificar(); // Ejecutar la función verificar
           setVerificado(true); // Actualizar el estado para indicar que verificar ha sido ejecutado
+          setPrimeravez(false)
+          setPrimeravez(false)
       }
   }, [obtenidaP, audioUser, verificado]); // Dependencias que activan el efecto
 
