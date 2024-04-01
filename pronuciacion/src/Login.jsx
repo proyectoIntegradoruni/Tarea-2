@@ -13,7 +13,7 @@ function Login() {
     e.preventDefault();
   
     try {
-      const response = await fetch('http://localhost:3001/login', {
+      const response = await fetch('https://tarea-2.onrender.com/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ function Login() {
         };
   
         // Realizar la petición al servidor para enviar el nuevo mensaje
-        const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+        const fetchResponse1 = await fetch('https://tarea-2.onrender.com/mensaje', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

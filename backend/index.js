@@ -7,7 +7,7 @@ const cors = require("cors");
 const UsuarioT = require('./Modelo/usuario');
 const multer = require('multer'); // Importa multer
 const Mensaje = require("./Modelo/conversacion")
-require('dotenv').config();
+
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const { IamAuthenticator } = require('ibm-watson/auth');
 conectarDB();
