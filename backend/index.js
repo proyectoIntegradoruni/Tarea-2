@@ -9,21 +9,12 @@ const app = express();
 
 app.use(express.json());
 
-const corsConfig = {
-  origin: "*",
-  credential: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-}
-app.options("", cors(corsConfig));
-app.use(cors(corsConfig));
 
-
+app.use(cors());
 
 
 conectarDB();
 
-
-app.use(cors());
 const PORT = process.env.PORT || 3001;
 
 
