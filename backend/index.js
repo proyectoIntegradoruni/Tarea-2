@@ -1,9 +1,17 @@
 const express = require('express');
 const app = express();
+const cors = require("cors");
+const corsConfig = {
+  origin: "*",
+  credential: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}
+app.options("", cors(corsConfig));
+app.use(cors(corsConfig));
 
 const  conectarDB = require('./conexion');
 const bodyParser = require('body-parser');
-const cors = require("cors");
+
 const multer = require('multer'); // Importa multer
 
 
