@@ -13,7 +13,14 @@ const { IamAuthenticator } = require('ibm-watson/auth');
 conectarDB();
 const fs = require('fs');
 app.use(bodyParser.json());
-app.use(cors());
+
+
+const corsOptions = {
+    origin: ['https://tarea-2-bqjmll3c4-atardecer01s-projects.vercel.app/','http://localhost:5173'],
+    methods: ["GET","POST", "PATCH", "DELETE"]
+  };
+
+app.use(cors(corsOptions))
 const PORT = process.env.PORT || 3001;
 
 function obtenerCategorias() {

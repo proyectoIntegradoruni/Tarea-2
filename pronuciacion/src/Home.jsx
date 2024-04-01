@@ -30,7 +30,7 @@ function Home() {
     // Función para obtener las categorías desde el servidor
     const obtenerCategoriasDesdeServidor = async () => {
       try {
-        const response = await fetch('https://tarea-2.onrender.com/categorias');
+        const response = await fetch('http://localhost:3001/categorias');
         if (!response.ok) {
           throw new Error('Error al obtener las categorías');
         }
@@ -64,7 +64,7 @@ function Home() {
       try {
         const remitente = nombreUsuario;
         const destinatario = 'Pronunciacion';
-        const url = 'https://tarea-2.onrender.com/historial';
+        const url = 'http://localhost:3001/historial';
 
         // Cambia esta línea a axios.get si es una solicitud GET
         const response = await axios.post(url, { remitente, destinatario });
@@ -110,7 +110,7 @@ function Home() {
 
       }
       // Realizar la petición al servidor para obtener una palabra aleatoria de la categoría seleccionada
-      const fetchResponse = await fetch(`https://tarea-2.onrender.com/palabra?categoria=${response}`);
+      const fetchResponse = await fetch(`http://localhost:3001/palabra?categoria=${response}`);
       
       // Verificar si la respuesta es exitosa
       if (!fetchResponse.ok) {
@@ -129,7 +129,7 @@ function Home() {
       };
       
       // Realizar la petición al servidor para enviar el nuevo mensaje
-      const fetchResponse1 = await fetch('https://tarea-2.onrender.com/mensaje', {
+      const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -151,7 +151,7 @@ function Home() {
       };
   
       // Realizar la petición al servidor para enviar el nuevo mensaje
-      const fetchResponse2 = await fetch('https://tarea-2.onrender.com/mensaje', {
+      const fetchResponse2 = await fetch('http://localhost:3001/mensaje', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -184,7 +184,7 @@ function Home() {
   }
   const obtenerCategoriasDesdeServidor2 = async () => {
     try {
-      const response = await fetch('https://tarea-2.onrender.com/categorias');
+      const response = await fetch('http://localhost:3001/categorias');
       if (!response.ok) {
         throw new Error('Error al obtener las categorías');
       }

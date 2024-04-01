@@ -11,7 +11,7 @@ function Registro() {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://tarea-2.onrender.com/registro', {
+      const response = await fetch('http://localhost:3001/registro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
