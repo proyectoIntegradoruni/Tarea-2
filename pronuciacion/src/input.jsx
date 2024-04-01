@@ -50,7 +50,7 @@ const Input = ({asesor}) => {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'grabacion.mpeg'); // Asegúrate de reemplazar 'grabacion.webm' con el nombre deseado para el archivo de audio
 
-        fetch('http://localhost:3001/audio', {
+        fetch('https://tarea-2.onrender.com/audio', {
           method: 'POST',
           body: formData
         })
@@ -103,7 +103,7 @@ const Input = ({asesor}) => {
               reproduccion: false // No se reproduce este mensaje
             };
             //peticion mandole  mensaje  de la transcripcion 
-            const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+            const fetchResponse1 = await fetch('https://tarea-2.onrender.com/mensaje', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -202,7 +202,7 @@ const Input = ({asesor}) => {
         reproduccion: false // No se reproduce este mensaje
       };
       //peticion mandole  mensaje  de la transcripcion 
-      const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+      const fetchResponse1 = await fetch('https://tarea-2.onrender.com/mensaje', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -227,7 +227,7 @@ const Input = ({asesor}) => {
         reproduccion: false // No se reproduce este mensaje
       };
       //peticion mandole  mensaje  de la transcripcion 
-      const fetchResponse1 = await fetch('http://localhost:3001/mensaje', {
+      const fetchResponse1 = await fetch('https://tarea-2.onrender.com/mensaje', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
