@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 
 const corsOptions = {
-    origin: ['https://tarea-2-bqjmll3c4-atardecer01s-projects.vercel.app/','http://localhost:5173'],
+    origin: ['https://tarea-2-six.vercel.app/','http://localhost:5173'],
     methods: ["GET","POST", "PATCH", "DELETE"]
   };
 
