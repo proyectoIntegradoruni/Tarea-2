@@ -1,7 +1,14 @@
-const express = require('express');
+import express from "express"
+import cors from 'cors';
+import  conectarDB from './conexion.js';
+import multer from 'multer'; // Importa multer
+
+import {obtenerMensajes, agregarMensaje, registrarUsuario, autenticar, categ, palab, ia} from "./function.js"
+
 const app = express();
 
-const cors = require("cors");
+app.use(express.json());
+
 const corsConfig = {
   origin: "*",
   credential: true,
@@ -10,17 +17,12 @@ const corsConfig = {
 app.options("", cors(corsConfig));
 app.use(cors(corsConfig));
 
-const  conectarDB = require('./conexion');
-const bodyParser = require('body-parser');
 
-const multer = require('multer'); // Importa multer
-
-const {obtenerMensajes, agregarMensaje, registrarUsuario, autenticar, categ, palab, ia} = require("./function")
 
 
 conectarDB();
 
-app.use(bodyParser.json());
+
 app.use(cors());
 const PORT = process.env.PORT || 3001;
 

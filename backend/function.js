@@ -1,11 +1,14 @@
 
-const UsuarioT = require('./Modelo/usuario');
+import UsuarioT from './Modelo/usuario.js';
 // Importa multer
-const Mensaje = require("./Modelo/conversacion")
-require('dotenv').config();
-const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
-const { IamAuthenticator } = require('ibm-watson/auth');
-const fs = require('fs');
+import Mensaje from "./Modelo/conversacion.js"
+import dotenv from 'dotenv';
+dotenv.config();
+
+import SpeechToTextV1 from 'ibm-watson/speech-to-text/v1.js';
+import IamAuthenticator from 'ibm-watson/auth/index.js';
+import fs from 'fs';
+
 
 const autenticar = async (req, res) => {
     const { email, password } = req.body;
@@ -218,4 +221,4 @@ const autenticar = async (req, res) => {
         res.status(500).json({ mensaje: 'Error interno del servidor' });
       }); 
   }
-  module.exports = { obtenerMensajes, agregarMensaje, registrarUsuario, autenticar, categ, palab, ia}
+ export { obtenerMensajes, agregarMensaje, registrarUsuario, autenticar, categ, palab, ia}
