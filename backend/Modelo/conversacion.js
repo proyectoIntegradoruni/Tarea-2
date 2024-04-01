@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const mensajeSchema = mongoose.Schema({
     remitente: {
@@ -22,7 +22,7 @@ const mensajeSchema = mongoose.Schema({
       
     }
 });
-const Mensaje = mongoose.model("Mensaje2", mensajeSchema);
+ Mensaje1 = mongoose.model("Mensaje2", mensajeSchema);
 
 
-export default Mensaje;
+module.exports =  Mensaje1;
