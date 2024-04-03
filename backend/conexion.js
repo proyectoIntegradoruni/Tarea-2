@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-
+require('dotenv').config();
 const conectarDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://rivaslina:qEqHkwUUMrtaG61u@taller1.7ujjqcr.mongodb.net/TallerI?retryWrites=true&w=majority', {
+    await mongoose.connect(process.env.APIMONGO, {
     });
 
     const url = `${mongoose.connection.host}:${mongoose.connection.port}`;

@@ -216,25 +216,22 @@ const upload = multer({ storage: storage });
 // Middleware para manejar la carga de archivos de audio
 app.post('/audio', upload.single('audio'), (req, res) => {
 
- 
   const speechToText = new SpeechToTextV1({
     authenticator: new IamAuthenticator({
-      apikey: "AjUoSfSaQ5W-4gerstpxHvCD0empCdSe-d65jCUZDjGF",
+      apikey: process.env.API,
     }),
     serviceUrl: "https://api.au-syd.speech-to-text.watson.cloud.ibm.com/instances/79307fc3-6bde-4beb-ad02-a2906d2f3766",
     disableSslVerification: true,
   }); 
   
-  
-  // Verificar si se proporcionó un archivo de audio
- if (!req.file) {
+   if (!req.file) {
     return res.status(400).json({ mensaje: 'No se ha proporcionado ningún archivo de audio' });
   }
 
  
    const contentType = req.file.mimetype;
   const transferencia = fs.createReadStream(req.file.path);
-  // Configurar los parámetros para enviar el audio a Watson Speech to Text
+  // Configuraracion de  los parámetros para enviar el audio a Watson Speech to Text
   const params = {
     audio: transferencia, // Pasar el contenido del archivo como un búfer
     contentType: 'audio/webm',
@@ -247,7 +244,6 @@ app.post('/audio', upload.single('audio'), (req, res) => {
       const transcripcion = response.result.results[0].alternatives[0].transcript;
       
       // Enviar la transcripción como respuesta al cliente
-      console.log("bien la trascripcion")
       res.status(200).json({ transcripcion });
     })
     .catch(error => {
@@ -259,10 +255,6 @@ app.post('/audio', upload.single('audio'), (req, res) => {
 
 app.post('/mensaje', agregarMensaje);
 app.post('/historial',obtenerMensajes);
-
-
-
-  
-app.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`Servidor Express escuchando en el puerto ${PORT}`);
   })
