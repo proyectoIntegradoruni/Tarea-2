@@ -71,7 +71,7 @@ function Login() {
     <div className="container">
       <div className="container-login">
       <div className="izq-login">
-        <img className="imagen-p" src={"../public/imagenP (1).png"} alt="Jovem Programador" />
+        <img className="imagen-p" src={"https://i.pinimg.com/736x/03/4f/9b/034f9bfbf57e9b41b80cf10c19bdded9.jpg"} alt="Jovem Programador" />
         
         
         <div className="wrap-login">
