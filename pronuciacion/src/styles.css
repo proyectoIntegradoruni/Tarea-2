@@ -7,6 +7,7 @@
 
 body, html {
   font-family: Nunito, sans-serif;
+  
 }
 
 .container {
@@ -33,18 +34,39 @@ body, html {
   align-items: center;
   justify-content: center;
   padding: 15px;
-  background-color: #111; /*color de fondo*/
+  background-image: url('../public/fondo.png'); /*color de fondo*/
+  background-size: cover; /* Para cubrir todo el fondo */
+  background-repeat: no-repeat; /* Para evitar que se repita la imagen */
 }
 .elemento-a-la-derecha {
   margin-left: auto; /* Esto posicionará el elemento a la derecha */
 }
-.wrap-login {
-  width: 390px;
-  background-color: #333;
+.izq-login {
+  width: 900px;
+  height: 500px; /* Por ejemplo, puedes ajustar el valor según tus necesidades */
+  background-color: #bff3a0;
   border-radius: 10px;
   overflow: hidden;
   padding: 77px 55px 33px 55px;
   box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.2);
+  margin-left: -20px; 
+  display: flex; 
+}
+.imagen-p {
+  width: 360px;
+  height: 450px; 
+  margin-top: -50px;
+}
+.wrap-login {
+  width: 400px;
+  height: 450px; 
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 77px 55px 33px 55px;
+  box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.2);
+  margin-top: -50px;
+  margin-left: 50px;
 }
 
 .login-form {
@@ -59,6 +81,17 @@ body, html {
   color: azure;
   line-height: 1.2;
   text-align: center;
+  
+}
+
+.login-form-titl {
+  font-family: "Playfair Display", serif;
+  display: block;
+  font-size: 30px;
+  color: rgb(0, 0, 0);
+  line-height: 1.2;
+  text-align: center;
+  margin-top: -50px;
 }
 
 .login-form-title img {
@@ -69,7 +102,7 @@ body, html {
   width: 100%;
   position: relative;
   border-bottom: 2px solid #adadad;
-  margin-bottom: 37px;
+  margin-bottom: 20px;
 }
 
 .input {
@@ -159,6 +192,7 @@ body, html {
   flex-wrap: wrap;
   justify-content: center;
   padding-bottom: 13px;
+  
 }
 
 .login-form-btn {
@@ -167,6 +201,7 @@ body, html {
   border-radius: 10px;
   color: #fff;
   line-height: 1.2;
+
   text-transform: uppercase;
   display: flex;
   justify-content: center;
@@ -207,7 +242,8 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
+
 }
 
 .txt1 {
@@ -232,7 +268,10 @@ body, html {
 
 
 .home {
-  background-color:rgb(225, 226, 246);;
+  background-image: url('../public/fondo.png'); /*color de fondo*/
+  background-size: cover; /* Para cubrir todo el fondo */
+  background-repeat: no-repeat;
+
   height: 100vh;
   width: 200vh;
   display: flex;
@@ -242,8 +281,8 @@ body, html {
   .container {
     border: 1px solid rgb(249, 249, 249);
     border-radius: 20px;
-    width: 85%;
-    height: 80%;
+    width: 90%;
+    height: 90%;
     display: flex;
     overflow: hidden;
     @include tablet {
@@ -374,7 +413,7 @@ body, html {
       }
 
       .messages {
-        background-color: #f3f3f5;
+        background-color: #fffeda;
         padding: 10px;
         height: calc(100% - 160px);
         overflow: scroll;

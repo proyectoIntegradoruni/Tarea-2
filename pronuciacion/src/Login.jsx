@@ -70,9 +70,13 @@ function Login() {
   return (
     <div className="container">
       <div className="container-login">
+      <div className="izq-login">
+        <img className="imagen-p" src={"../public/imagenP (1).png"} alt="Jovem Programador" />
+        
+        
         <div className="wrap-login">
           <form className="login-form" onSubmit={handleLogin}>
-            <span className="login-form-title"> Bienvenidos </span>
+            <span className="login-form-titl"> Bienvenidos </span>
 
             <span className="login-form-title">
               <img src={"https://cdn-icons-png.flaticon.com/512/3898/3898068.png"} alt="Jovem Programador" />
@@ -83,6 +87,7 @@ function Login() {
                 className={email !== "" ? "has-val input" : "input"}
                 type="email"
                 value={email}
+                style={{ color: email !== "" ? "black" : "black" }}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 required
@@ -94,6 +99,7 @@ function Login() {
                 className={password !== "" ? "has-val input" : "input"}
                 type="password"
                 value={password}
+                style={{ color: password !== "" ? "black" : "black" }}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
@@ -111,6 +117,7 @@ function Login() {
               </a>
             </div>
           </form>
+        </div>
         </div>
       </div>
     </div>

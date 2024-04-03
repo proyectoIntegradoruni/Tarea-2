@@ -39,7 +39,7 @@ function Registro() {
       <div className="container-login">
         <div className="wrap-login">
           <form className="login-form" onSubmit={handleRegistro}>
-            <span className="login-form-title"> Registro </span>
+            <span className="login-form-titl"> Registro </span>
 
             <span className="login-form-title">
               <img src={"https://cdn-icons-png.flaticon.com/512/3898/3898068.png"} alt="Jovem Programador" />
@@ -50,6 +50,7 @@ function Registro() {
                 className={nombre !== "" ? "has-val input" : "input"}
                 type="text"
                 value={nombre}
+                style={{ color: nombre !== "" ? "black" : "black" }}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="Nombre"
                 required
@@ -61,6 +62,7 @@ function Registro() {
                 className={email !== "" ? "has-val input" : "input"}
                 type="email"
                 value={email}
+                style={{ color: email !== "" ? "black" : "black" }}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 required
@@ -72,6 +74,7 @@ function Registro() {
                 className={password !== "" ? "has-val input" : "input"}
                 type="password"
                 value={password}
+                style={{ color: password !== "" ? "black" : "black" }}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
